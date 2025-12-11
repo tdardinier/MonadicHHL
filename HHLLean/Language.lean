@@ -11,7 +11,7 @@ def Exp (α : Type) : Type :=
   State α → α
 
 def BExp (α : Type) : Type :=
-  State α → Prop
+  State α → Bool
 
 def LNot {α : Type} (b : BExp α) : BExp α :=
   fun σ => ¬b σ
@@ -68,7 +68,7 @@ notation:65 "⟨" C ", " σ "⟩" " ⟹ " σ' => BigStep C σ σ'
 def sem {α : Type} (C : Stmt α) (S : Set (State α)) : Set (State α) :=
   {σ' | ∃ σ, S σ ∧ ⟨C, σ⟩ ⟹ σ' }
 
-@[grind]
+@[grind =]
 lemma sem_iff {α : Type} (σ' : State α) C S :
   sem C S σ' ↔ ∃σ, S σ ∧ ⟨C, σ⟩ ⟹ σ' :=
   by
@@ -105,7 +105,7 @@ lemma bigstep_branch_iff {α : Type} (C₁ C₂ : Stmt α) (σ σ' : State α) :
   by
   grind
 
-@[grind]
+@[grind =]
 lemma in_union_iff {α : Type} (S₁ S₂ : Set (State α)) (σ' : State α) :
     (S₁ ∪ S₂) σ' ↔ S₁ σ' ∨ S₂ σ' :=
   by
@@ -117,7 +117,7 @@ lemma sem_branch {α : Type} (C₁ C₂ : Stmt α) (S : Set (State α)) :
   apply funext
   grind
 
-@[grind]
+@[grind .]
 lemma sem_mono {α : Type} (C : Stmt α) {S₁ S₂ : Set (State α)} :
     S₁ ⊆ S₂ → sem C S₁ ⊆ sem C S₂ :=
   by
@@ -129,7 +129,7 @@ lemma sem_mono {α : Type} (C : Stmt α) {S₁ S₂ : Set (State α)} :
     exact in_S1 }
   { exact step }
 
-@[grind]
+@[grind =]
 lemma subset_iff {α : Type} (S S' : Set α) :
   S ⊆ S' ↔ ∀ x, S x → S' x :=
   by
@@ -231,20 +231,22 @@ lemma sem_iter {α : Type} (C : Stmt α) (S : Set (State α)) :
   have hh := sem_iter_one C S n
   aesop
 
-@[grind]
+@[grind =]
 lemma in_inter_iff {α : Type} (S₁ S₂ : Set (State α)) (σ' : State α) :
     (S₁ ∩ S₂) σ' ↔ S₁ σ' ∧ S₂ σ' :=
   by
   aesop
 
+@[grind]
+def to_bprop {α : Type} (b : BExp α) : State α → Prop :=
+  fun σ => b σ = true
+
 @[simp]
 lemma sem_assume {α : Type} (b : BExp α) (S : Set (State α)) :
-    sem (Stmt.assume b) S = S ∩ b :=
+    sem (Stmt.assume b) S = S ∩ to_bprop b :=
     by
       apply funext
       grind
-
-#check Set.mem_iUnion
 
 @[simp]
 lemma in_indexed_union {α β : Type} (f : β → Set (State α)) (σ' : State α) :
