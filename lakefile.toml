@@ -1,7 +1,7 @@
-name = "HHL_Lean"
+name = "MonadicHHL"
 version = "0.1.0"
 keywords = ["math"]
-defaultTargets = ["HHLLean"]
+defaultTargets = ["MonadicHHL"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
@@ -12,6 +12,28 @@ maxSynthPendingDepth = 3
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
+rev = "f897ebcf72cd16f89ab4577d0c826cd14afaafc7"
+inputRev = "v4.24.0"
 
 [[lean_lib]]
-name = "HHLLean"
+name = "MonadicHHL"
+
+[[require]]
+name = "smt"
+scope = "ufmg-smite"
+rev = "main"
+
+#[[require]]
+#name = "batteries"
+#scope = "leanprover-community"
+#rev = "8da40b72fece29b7d3fe3d768bac4c8910ce9bee"
+
+#[[require]]
+#name = "plausible"
+#scope = "leanprover-community"
+#rev = "main"
+
+[[require]]
+name = "auto"
+git = "https://github.com/leanprover-community/lean-auto.git"
+rev = "v4.24.0-hammer"
