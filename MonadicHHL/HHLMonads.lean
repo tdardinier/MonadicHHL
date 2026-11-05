@@ -28,7 +28,7 @@ section
 
 namespace HHL
 
-variable {M : Type _ → Type _} [Monad M] [HHL M]  -- pretend we live in a world with a MyClass α
+variable {M : Type _ → Type _} [Monad M] [HHL M]
 
 
 def semify {α₁ α₂ : Type}
